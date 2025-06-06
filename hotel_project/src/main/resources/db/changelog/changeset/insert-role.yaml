@@ -1,0 +1,213 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: timazay
+      changes:
+        - insert:
+            tableName: hotels
+            columns:
+              - column:
+                  name: name
+                  value: "DoubleTree by Hilton Minsk"
+              - column:
+                  name: description
+                  value: "The DoubleTree by Hilton Hotel Minsk offers 193 luxurious rooms in the Belorussian capital and stunning views of Minsk city from the hotel's 20th floor ..."
+              - column:
+                  name: brand
+                  value: "Hilton"
+              - column:
+                  name: house_number
+                  value: "9"
+              - column:
+                  name: street
+                  value: "Pobediteley Avenue"
+              - column:
+                  name: city
+                  value: "Minsk"
+              - column:
+                  name: country
+                  value: "Belarus"
+              - column:
+                  name: post_code
+                  value: "220004"
+        - insert:
+            tableName: contacts
+            columns:
+              - column:
+                  name: hotel_id
+                  value: 1
+              - column:
+                  name: phone
+                  value: "+375 17 309-80-00"
+              - column:
+                  name: email
+                  value: "doubletreeminsk.info@hilton.com"
+        - insert:
+            tableName: arrival_time
+            columns:
+              - column:
+                  name: check_in
+                  value: "14:00"
+              - column:
+                  name: check_out
+                  value: "12:00"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Free parking"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Free WiFi"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Non-smoking rooms"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Concierge"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "On-site restaurant"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Fitness center"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Pet-friendly rooms"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Room service"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Business center"
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: amenity
+                  value: "Meeting rooms"
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 1
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 2
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 3
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 4
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 5
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 6
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 7
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 8
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 9
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_amenities
+            columns:
+              - column:
+                  name: amenity_id
+                  value: 10
+              - column:
+                  name: hotel_id
+                  value: 1
+        - insert:
+            tableName: hotel_arrival_times
+            columns:
+              - column:
+                  name: hotel_id
+                  value: 1
+              - column:
+                  name: arrival_time_id
+                  value: 1
+
