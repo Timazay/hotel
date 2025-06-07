@@ -34,42 +34,17 @@ databaseChangeLog:
                   name: city
                   type: VARCHAR(255)
               - column:
-                  name: country
-                  type: VARCHAR(255)
-              - column:
-                  name: post_code
-                  type: VARCHAR(100)
-        - createTable:
-            tableName: contacts
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: hotel_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-              - column:
                   name: phone
                   type: VARCHAR(50)
               - column:
                   name: email
                   type: VARCHAR(255)
-        - createTable:
-            tableName: arrival_time
-            columns:
               - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
+                  name: country
+                  type: VARCHAR(255)
+              - column:
+                  name: post_code
+                  type: VARCHAR(100)
               - column:
                   name: check_in
                   type: VARCHAR(50)
@@ -100,16 +75,3 @@ databaseChangeLog:
               - column:
                   name: hotel_id
                   type: BIGINT
-        - createTable:
-            tableName: hotel_arrival_times
-            columns:
-              - column:
-                  name: hotel_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-              - column:
-                  name: arrival_time_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false

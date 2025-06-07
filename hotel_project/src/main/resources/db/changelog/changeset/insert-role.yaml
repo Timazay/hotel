@@ -16,6 +16,12 @@ databaseChangeLog:
                   name: brand
                   value: "Hilton"
               - column:
+                  name: phone
+                  value: "+375 17 309-80-00"
+              - column:
+                  name: email
+                  value: "doubletreeminsk.info@hilton.com"
+              - column:
                   name: house_number
                   value: "9"
               - column:
@@ -30,21 +36,6 @@ databaseChangeLog:
               - column:
                   name: post_code
                   value: "220004"
-        - insert:
-            tableName: contacts
-            columns:
-              - column:
-                  name: hotel_id
-                  value: 1
-              - column:
-                  name: phone
-                  value: "+375 17 309-80-00"
-              - column:
-                  name: email
-                  value: "doubletreeminsk.info@hilton.com"
-        - insert:
-            tableName: arrival_time
-            columns:
               - column:
                   name: check_in
                   value: "14:00"
@@ -201,13 +192,5 @@ databaseChangeLog:
               - column:
                   name: hotel_id
                   value: 1
-        - insert:
-            tableName: hotel_arrival_times
-            columns:
-              - column:
-                  name: hotel_id
-                  value: 1
-              - column:
-                  name: arrival_time_id
-                  value: 1
+
 
