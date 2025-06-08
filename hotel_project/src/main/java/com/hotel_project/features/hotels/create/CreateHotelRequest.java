@@ -1,12 +1,12 @@
 package com.hotel_project.features.hotels.create;
 
-import com.hotel_project.features.common.dto.AddressDTO;
-import com.hotel_project.features.common.dto.ArrivalTimeDTO;
-import com.hotel_project.features.common.dto.ContactDTO;
+import com.hotel_project.features.hotels.get_by_id.AddressDTO;
+import com.hotel_project.features.hotels.get_by_id.ArrivalTimeDTO;
+import com.hotel_project.features.hotels.get_by_id.ContactDTO;
 import lombok.Data;
 
 @Data
-public class HotelRequest {
+public class CreateHotelRequest {
     private String name;
     private String description;
     private String brand;

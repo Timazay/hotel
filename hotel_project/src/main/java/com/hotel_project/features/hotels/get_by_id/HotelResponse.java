@@ -1,8 +1,5 @@
 package com.hotel_project.features.hotels.get_by_id;
 
-import com.hotel_project.features.common.dto.AddressDTO;
-import com.hotel_project.features.common.dto.ArrivalTimeDTO;
-import com.hotel_project.features.common.dto.ContactDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

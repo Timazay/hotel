@@ -1,7 +1,7 @@
 package com.hotel_project.controllers;
 
 import com.hotel_project.common.exceptions.BadRequestException;
-import com.hotel_project.features.histograms.get.GroupHotelByParamHandler;
+import com.hotel_project.features.histograms.get.GetHotelHistogramHadler;
 import com.hotel_project.features.histograms.get.HotelParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,17 +17,17 @@ import java.util.Map;
 @RequestMapping("${hotel.prefix}")
 @Tag(name = "Histogram controller")
 public class HistogramController {
-    private final GroupHotelByParamHandler groupHotelByParamHandler;
+    private final GetHotelHistogramHadler getHotelByParamHandler;
 
     @Autowired
-    public HistogramController(GroupHotelByParamHandler groupHotelByParamHandler) {
-        this.groupHotelByParamHandler = groupHotelByParamHandler;
+    public HistogramController(GetHotelHistogramHadler getHotelByParamHandler) {
+        this.getHotelByParamHandler = getHotelByParamHandler;
     }
 
     @GetMapping("/histogram/{param}")
     @Operation(description = "Group hotel by param")
     public ResponseEntity<Map<String, String>> groupHotelByParam(@PathVariable String param) throws BadRequestException {
-        Map<String, String> result = groupHotelByParamHandler.execute(HotelParam.fromValue(param));
+        Map<String, String> result = getHotelByParamHandler.execute(HotelParam.fromValue(param));
         return ResponseEntity.ok(result);
     }
 }

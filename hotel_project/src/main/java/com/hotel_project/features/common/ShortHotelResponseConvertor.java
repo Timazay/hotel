@@ -2,12 +2,13 @@ package com.hotel_project.features.common;
 
 import com.hotel_project.domain.Address;
 import com.hotel_project.domain.Hotel;
+import com.hotel_project.features.common.dto.ShortHotelResponse;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ConvertToShortHotelResponse {
+public class ShortHotelResponseConvertor {
     public List<ShortHotelResponse> convert(List<Hotel> hotels){
         List<ShortHotelResponse> responses = new ArrayList<>();
 

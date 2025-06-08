@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class CreateHotelRequestValidator {
-    public void validate(HotelRequest hotelRequest) throws BadRequestException {
+    public void validate(CreateHotelRequest hotelRequest) throws BadRequestException {
         if (hotelRequest == null) {
             throw new BadRequestException("Empty request");
         }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class GroupByParamDto {
+public class HistogramItemDto {
     private String key;
     private Long count;
 }

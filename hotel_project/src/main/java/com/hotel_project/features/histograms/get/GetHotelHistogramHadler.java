@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class GroupHotelByParamHandler {
+public class GetHotelHistogramHadler {
     private final HotelRepository hotelRepository;
 
     @Autowired
-    public GroupHotelByParamHandler(HotelRepository hotelRepository) {
+    public GetHotelHistogramHadler(HotelRepository hotelRepository) {
         this.hotelRepository = hotelRepository;
     }
 
     public Map<String, String> execute(HotelParam param) {
-        List<GroupByParamDto> results = new ArrayList<>();
+        List<HistogramItemDto> results = new ArrayList<>();
         switch (param.getValue()) {
             case "amenities":
                 results = hotelRepository.groupByAmenities();
@@ -35,7 +35,8 @@ public class GroupHotelByParamHandler {
         }
 
         Map<String, String> resultMap = new HashMap<>();
-        for (GroupByParamDto result : results) {
+
+        for (HistogramItemDto result : results) {
             String key = result.getKey();
             Long count = result.getCount();
             resultMap.put(key, count.toString());

@@ -6,6 +6,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface AmenityRepository extends JpaRepository<Amenity, Long> {
-    List<Amenity> findByAmenityIn(Collection<String> amenity);
+    List<Amenity> findByAmenityIn(Collection<String> amenities);
 }
 

@@ -7,9 +7,9 @@ import com.hotel_project.domain.Hotel;
 import com.hotel_project.infrastructure.repository.AmenityRepository;
 import com.hotel_project.infrastructure.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CreateAmenitiesHandler {
@@ -24,6 +24,7 @@ public class CreateAmenitiesHandler {
 
     public void execute(CreateAmenitiesRequest request) throws NotFoundException, BadRequestException {
         List<String> amenities = request.getAmenities();
+
         if (amenities != null) {
             Set<String> amenitiesSet = new HashSet<>(amenities);
             if (amenitiesSet.size() != amenities.size()) {
@@ -37,24 +38,30 @@ public class CreateAmenitiesHandler {
 
 
         List<Amenity> matches = amenityRepository.findByAmenityIn(amenities);
-        List<Amenity> copyMatches = new ArrayList<>(matches);
+        List<Amenity> hotelAmenities = hotel.getAmenities();
 
-        for (int i = 0; i < amenities.size(); i++) {
-            for (int j = 0; j < matches.size(); j++) {
-                if (!matches.get(j).getAmenity().equals(amenities.get(i))) {
-                    Amenity amenity = new Amenity();
-                    amenity.setAmenity(amenities.get(i));
-                    copyMatches.add(amenity);
-                    break;
-                }
+        Set<String> matchAmenityNames = matches.stream()
+                .map(Amenity::getAmenity)
+                .collect(Collectors.toSet());
+
+        List<Amenity> updatedAmenities = new ArrayList<>(hotelAmenities);
+
+        for (Amenity amenity : matches) {
+            if (!updatedAmenities.contains(amenity)) {
+                updatedAmenities.add(amenity);
             }
         }
-        hotel.setAmenities(copyMatches);
 
-        try {
-            hotelRepository.save(hotel);
-        } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("One of amenities already belongs to this hotel");
+        for (String s : amenities) {
+            if (!matchAmenityNames.contains(s)) {
+                Amenity newAmenity = new Amenity();
+                newAmenity.setAmenity(s);
+                updatedAmenities.add(newAmenity);
+            }
         }
+
+        hotel.setAmenities(updatedAmenities);
+
+        hotelRepository.save(hotel);
     }
 }

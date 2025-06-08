@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArrivalTimeDTO {
-    private String checkIn;
-    private String checkOut;
+public class ShortHotelResponse {
+    private long id;
+    private String name;
+    private String description;
+    private String address;
+    private String phone;
 }

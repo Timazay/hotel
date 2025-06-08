@@ -1,15 +1,15 @@
 package com.hotel_project.features.hotels.create;
 
 import com.hotel_project.common.exceptions.BadRequestException;
-import com.hotel_project.features.common.FirstLetterUpperHelper;
-import com.hotel_project.features.common.ShortHotelResponse;
+import com.hotel_project.common.helpers.StringHelper;
+import com.hotel_project.features.common.dto.ShortHotelResponse;
 import com.hotel_project.domain.Address;
 import com.hotel_project.domain.ArrivalTime;
 import com.hotel_project.domain.Contact;
 import com.hotel_project.domain.Hotel;
-import com.hotel_project.features.common.dto.AddressDTO;
-import com.hotel_project.features.common.dto.ArrivalTimeDTO;
-import com.hotel_project.features.common.dto.ContactDTO;
+import com.hotel_project.features.hotels.get_by_id.AddressDTO;
+import com.hotel_project.features.hotels.get_by_id.ArrivalTimeDTO;
+import com.hotel_project.features.hotels.get_by_id.ContactDTO;
 import com.hotel_project.infrastructure.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,11 @@ public class CreateHotelHandler {
         this.hotelRequestValidation = hotelRequestValidation;
     }
 
-    public ShortHotelResponse execute(HotelRequest request) throws BadRequestException {
+    public ShortHotelResponse execute(CreateHotelRequest request) throws BadRequestException {
         hotelRequestValidation.validate(request);
-        String city = request.getAddress().getCity();
+        String city = request
+                .getAddress()
+                .getCity();
         AddressDTO addressDTO = request.getAddress();
         Address  address = new Address(addressDTO.getHouseNumber(),
                 addressDTO.getStreet(),
@@ -42,8 +44,8 @@ public class CreateHotelHandler {
         Contact contact = new Contact(contactDTO.getPhone(), contactDTO.getEmail());
 
         String country = address.getCountry();
-        address.setCountry(FirstLetterUpperHelper.makeFirstLetterInUpperCase(country));
-        address.setCity(FirstLetterUpperHelper.makeFirstLetterInUpperCase(city));
+        address.setCountry(StringHelper.makeFirstLetterInUpperCase(country));
+        address.setCity(StringHelper.makeFirstLetterInUpperCase(city));
 
         Hotel hotel = Hotel.builder()
                 .name(request.getName())
@@ -56,7 +58,10 @@ public class CreateHotelHandler {
 
         hotel = hotelRepository.save(hotel);
 
-        return new ShortHotelResponse(hotel.getId(), hotel.getName(), hotel.getDescription(),
-                hotel.getAddress().toString(), hotel.getContact().toString());
+        return new ShortHotelResponse(hotel.getId(),
+                hotel.getName(),
+                hotel.getDescription(),
+                hotel.getAddress().toString(),
+                hotel.getContact().toString());
     }
 }
