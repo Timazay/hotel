@@ -2,7 +2,6 @@ package com.hotel_project;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import com.hotel_project.common.exceptions.BadRequestException;
@@ -56,7 +55,7 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void test_AddNewAndExistingAmenities_ToSave() throws Exception {
+    public void testExecute_AddNewAndExistingAmenities_ToSave() throws Exception {
         List<String> amenitiesToAdd = Arrays.asList("WiFi", "Gym");
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(2L, amenitiesToAdd);
 
@@ -83,7 +82,7 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void test_DuplicateAmenities_ThrowsBadRequest() {
+    public void testExecute_DuplicateAmenities_ThrowsBadRequest() {
         List<String> amenitiesToAdd = Arrays.asList("WiFi", "WiFi");
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(1, amenitiesToAdd);
 
@@ -93,7 +92,7 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void test_HotelNotFound_ThrowsNotFound() {
+    public void testExecute_HotelNotFound_ThrowsNotFound() {
         when(hotelRepository.findById(2L)).thenReturn(Optional.empty());
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(2, Arrays.asList("Spa"));
 
@@ -103,7 +102,7 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void test_AddNewAmenity_When_AmenityNotExists() throws Exception {
+    public void testExecute_AddNewAmenity_When_AmenityNotExists() throws Exception {
         List<String> amenitiesToAdd = Arrays.asList("Sauna");
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(1, amenitiesToAdd);
 
@@ -124,14 +123,14 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void test_AddNewAmenity_When_AllAmenitiesAlreadyExists() throws Exception {
+    public void testExecute_AddNewAmenity_When_AllAmenitiesAlreadyExists() throws Exception {
         List<String> amenitiesToAdd = Arrays.asList(
                 hotel.getAmenities().get(0).getAmenity(),
                 hotel.getAmenities().get(1).getAmenity()
         );
-        CreateAmenitiesRequest request = new CreateAmenitiesRequest(1, amenitiesToAdd);
+        CreateAmenitiesRequest request = new CreateAmenitiesRequest(2, amenitiesToAdd);
 
-        when(hotelRepository.findById(1L)).thenReturn(Optional.of(hotel));
+        when(hotelRepository.findById(request.getHotelId())).thenReturn(Optional.of(hotel));
         when(amenityRepository.findByAmenityIn(amenitiesToAdd))
                 .thenReturn(List.of(hotel.getAmenities().get(0), hotel.getAmenities().get(1)));
 

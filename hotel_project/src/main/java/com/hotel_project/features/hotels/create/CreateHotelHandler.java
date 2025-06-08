@@ -2,6 +2,7 @@ package com.hotel_project.features.hotels.create;
 
 import com.hotel_project.common.exceptions.BadRequestException;
 import com.hotel_project.common.helpers.StringHelper;
+import com.hotel_project.features.common.ShortHotelResponseConvertor;
 import com.hotel_project.features.common.dto.ShortHotelResponse;
 import com.hotel_project.domain.Address;
 import com.hotel_project.domain.ArrivalTime;
@@ -14,15 +15,20 @@ import com.hotel_project.infrastructure.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CreateHotelHandler {
     private final HotelRepository hotelRepository;
     private final CreateHotelRequestValidator hotelRequestValidation;
+    private final ShortHotelResponseConvertor shortHotelResponseConvertor;
 
     @Autowired
-    public CreateHotelHandler(HotelRepository hotelRepository, CreateHotelRequestValidator hotelRequestValidation) {
+    public CreateHotelHandler(HotelRepository hotelRepository, CreateHotelRequestValidator hotelRequestValidation,
+                              ShortHotelResponseConvertor shortHotelResponseConvertor) {
         this.hotelRepository = hotelRepository;
         this.hotelRequestValidation = hotelRequestValidation;
+        this.shortHotelResponseConvertor = shortHotelResponseConvertor;
     }
 
     public ShortHotelResponse execute(CreateHotelRequest request) throws BadRequestException {
@@ -58,10 +64,6 @@ public class CreateHotelHandler {
 
         hotel = hotelRepository.save(hotel);
 
-        return new ShortHotelResponse(hotel.getId(),
-                hotel.getName(),
-                hotel.getDescription(),
-                hotel.getAddress().toString(),
-                hotel.getContact().toString());
+        return shortHotelResponseConvertor.convert(List.of(hotel)).get(0);
     }
 }
