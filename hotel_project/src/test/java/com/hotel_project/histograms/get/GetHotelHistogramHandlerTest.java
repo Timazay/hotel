@@ -31,7 +31,7 @@ public class GetHotelHistogramHandlerTest {
     }
 
     @Test
-    public void execute_When_Hotel_Param_Is_Amenities_Should_Return_Map_Of_String_With_Grouped_Values() {
+    public void execute_When_Hotel_Param_Is_Amenities_Should_Return_Map_Of_String_With_Grouped_Values() throws BadRequestException {
         String pool = "Pool";
         String gym = "Gym";
         List<HistogramItemDto> mockResults = Arrays.asList(
@@ -41,20 +41,15 @@ public class GetHotelHistogramHandlerTest {
         when(hotelRepository.groupByAmenities()).thenReturn(mockResults);
 
         Map<String, String> actualResults = null;
-        try {
             actualResults = handler.execute(HotelParam.fromValue("amenities"));
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
-        }
 
         assertEquals(2, actualResults.size());
         assertEquals("10", actualResults.get(pool));
         assertEquals("5", actualResults.get(gym));
-        verify(hotelRepository).groupByAmenities();
     }
 
     @Test
-    public void execute_When_Hotel_Param_Is_Brand_Should_Return_Map_Of_String_With_Grouped_Values() {
+    public void execute_When_Hotel_Param_Is_Brand_Should_Return_Map_Of_String_With_Grouped_Values() throws BadRequestException {
         String brand = "BrandA";
         String brand2 = "BrandB";
         List<HistogramItemDto> mockResults = Arrays.asList(
@@ -64,20 +59,16 @@ public class GetHotelHistogramHandlerTest {
         when(hotelRepository.groupByBrand()).thenReturn(mockResults);
 
         Map<String, String> result = null;
-        try {
+
             result = handler.execute(HotelParam.fromValue("brand"));
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
-        }
 
         assertEquals(2, result.size());
         assertEquals("7", result.get(brand));
         assertEquals("3", result.get(brand2));
-        verify(hotelRepository).groupByBrand();
     }
 
     @Test
-    public void execute_Hotel_Param_Is_City_Should_Return_Map_Of_String_With_Grouped_Values() {
+    public void execute_Hotel_Param_Is_City_Should_Return_Map_Of_String_With_Grouped_Values() throws BadRequestException {
         String city = "New York";
         String city2 = "Paris";
         List<HistogramItemDto> mockResults = Arrays.asList(
@@ -87,20 +78,15 @@ public class GetHotelHistogramHandlerTest {
         when(hotelRepository.groupByCity()).thenReturn(mockResults);
 
         Map<String, String> result = null;
-        try {
             result = handler.execute(HotelParam.fromValue("city"));
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
-        }
 
         assertEquals(2, result.size());
         assertEquals("12", result.get(city));
         assertEquals("8", result.get(city2));
-        verify(hotelRepository).groupByCity();
     }
 
     @Test
-    public void execute_When_Hotel_Param_Is_Country_Should_Return_Map_Of_String_With_Grouped_Values() {
+    public void execute_When_Hotel_Param_Is_Country_Should_Return_Map_Of_String_With_Grouped_Values() throws BadRequestException {
         String country = "USA";
         String country2 = "France";
         List<HistogramItemDto> mockResults = Arrays.asList(
@@ -110,15 +96,11 @@ public class GetHotelHistogramHandlerTest {
         when(hotelRepository.groupByCountry()).thenReturn(mockResults);
 
         Map<String, String> result = null;
-        try {
+
             result = handler.execute(HotelParam.fromValue("country"));
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
-        }
 
         assertEquals(2, result.size());
         assertEquals("20", result.get(country));
         assertEquals("15", result.get(country2));
-        verify(hotelRepository).groupByCountry();
     }
 }

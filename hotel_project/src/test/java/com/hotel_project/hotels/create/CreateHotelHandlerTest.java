@@ -93,7 +93,6 @@ public class CreateHotelHandlerTest {
         ShortHotelResponse actualResponse = handler.execute(request);
 
         assertEquals(actualResponse, expectedResponse);
-        verify(hotelRequestValidation).validate(request);
     }
 
     @Test

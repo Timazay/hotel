@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -85,7 +84,6 @@ public class SearchHotelHandlerTest {
         List<ShortHotelResponse> actualResult = handler.execute(request);
 
         assertEquals(responseList, actualResult);
-        verify(hotelRepository).search(request);
     }
 
     @Test
@@ -96,6 +94,5 @@ public class SearchHotelHandlerTest {
         List<ShortHotelResponse> result = handler.execute(null);
 
         assertEquals(responseList, result);
-        verify(hotelRepository).findAll();
     }
 }

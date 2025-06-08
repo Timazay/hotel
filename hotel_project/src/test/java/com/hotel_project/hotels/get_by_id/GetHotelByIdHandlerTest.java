@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +33,7 @@ public class GetHotelByIdHandlerTest {
         this.handler = new GetHotelByIdHandler(hotelRepository);
         hotelId = 1L;
 
-        Address address = new Address("123", "Main St", "Kyiv", "Ukraine", "01001");
+        Address address = new Address("123", "Main St", "Minsk", "Belarus", "01001");
         Contact contact = new Contact("+380123456789", "test@example.com");
         ArrivalTime arrivalTime = new ArrivalTime("14:00", "12:00");
 
@@ -59,15 +60,14 @@ public class GetHotelByIdHandlerTest {
     public void execute_When_Find_Existing_Hotel_By_Id_Should_Return_HotelResponse() throws Exception {
         when(hotelRepository.findById(hotelId)).thenReturn(Optional.of(hotel));
 
-        HotelResponse response = handler.execute(hotelId);
+        HotelResponse actualResponse = handler.execute(hotelId);
 
-        assertAll(
-                () -> assertEquals(hotel.getId(), response.getId()),
-                () -> assertEquals(hotel.getName(), response.getName()),
-                () -> assertEquals(hotel.getAddress().getCity(), response.getAddress().getCity()),
-                () -> assertEquals(hotel.getContact().getEmail(), response.getContact().getEmail()),
-                () -> assertEquals(2, response.getAmenities().size())
-        );
+        assertThat(actualResponse.getId()).isEqualTo(hotel.getId());
+        assertThat(actualResponse.getName()).isEqualTo(hotel.getName());
+        assertThat(actualResponse.getAddress().getCity()).isEqualTo(hotel.getAddress().getCity());
+        assertThat(actualResponse.getContact().getEmail()).isEqualTo(hotel.getContact().getEmail());
+        assertThat(actualResponse.getAmenities()).hasSize(2);
+
     }
 
     @Test
@@ -75,6 +75,7 @@ public class GetHotelByIdHandlerTest {
         when(hotelRepository.findById(hotelId)).thenReturn(Optional.empty());
 
         NotFoundException thrown = assertThrows(NotFoundException.class, () -> handler.execute(hotelId));
+
         assertEquals("There is no such hotel", thrown.getMessage());
         assertTrue(thrown.getMetadata().containsKey("id"));
         assertEquals(String.valueOf(hotelId), thrown.getMetadata().get("id"));
