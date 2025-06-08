@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class GetHotelHistogramHadler {
+public class GetHotelHistogramHandler {
     private final HotelRepository hotelRepository;
 
     @Autowired
-    public GetHotelHistogramHadler(HotelRepository hotelRepository) {
+    public GetHotelHistogramHandler(HotelRepository hotelRepository) {
         this.hotelRepository = hotelRepository;
     }
 

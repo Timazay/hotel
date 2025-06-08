@@ -1,5 +1,8 @@
-package com.hotel_project;
+package com.hotel_project.hotels.search;
 
+import com.hotel_project.domain.Address;
+import com.hotel_project.domain.ArrivalTime;
+import com.hotel_project.domain.Contact;
 import com.hotel_project.domain.Hotel;
 import com.hotel_project.features.common.ShortHotelResponseConvertor;
 import com.hotel_project.features.common.dto.ShortHotelResponse;
@@ -39,29 +42,54 @@ public class SearchHotelHandlerTest {
 
         request = new SearchHotelsRequest();
 
+        Address address = new Address(
+                "123",
+                "Main St",
+                "Minsk",
+                "Belarus",
+                "01001");
+
+        ArrivalTime arrivalTime = new ArrivalTime("14:00", "12:00");
+
+        Contact contact = new Contact("+380123456789", "test@example.com");
+
         Hotel hotel1 = new Hotel();
         Hotel hotel2 = new Hotel();
+        hotel1.setName("Hotel Name");
+        hotel1.setBrand("BrandX");
+        hotel1.setDescription("Nice hotel");
+        hotel1.setAddress(address);
+        hotel1.setArrivalTime(arrivalTime);
+        hotel1.setContact(contact);
+
+        hotel2.setName("Hotel Name");
+        hotel2.setBrand("BrandX");
+        hotel2.setDescription("Nice hotel");
+        hotel2.setAddress(address);
+        hotel2.setArrivalTime(arrivalTime);
+        hotel2.setContact(contact);
         hotelList = Arrays.asList(hotel1, hotel2);
 
         ShortHotelResponse shortResponse1 = new ShortHotelResponse();
+
         ShortHotelResponse shortResponse2 = new ShortHotelResponse();
         responseList = Arrays.asList(shortResponse1, shortResponse2);
     }
 
     @Test
-    public void testExecute_WithRequest() {
+    public void execute_When_SearchHotelRequest_Find_Hotels_By_One_Of_Param_Should_Return_List_Of_Matching_ShortHotelResponse() {
+        request.setName("Hotel Name");
         when(hotelRepository.search(request)).thenReturn(hotelList);
         when(convertor.convert(hotelList)).thenReturn(responseList);
 
-        List<ShortHotelResponse> result = handler.execute(request);
+        List<ShortHotelResponse> actualResult = handler.execute(request);
 
-        assertEquals(responseList, result);
+        assertEquals(responseList, actualResult);
         verify(hotelRepository).search(request);
-        verify(convertor).convert(hotelList);
     }
 
     @Test
-    public void testExecute_NullRequestReturnsAll() {
+    public void execute_When_Parameters_Is_Null_Should_Return_List_Of_All_ShortHotelResponse() {
         when(hotelRepository.findAll()).thenReturn(hotelList);
         when(convertor.convert(hotelList)).thenReturn(responseList);
 
@@ -69,6 +97,5 @@ public class SearchHotelHandlerTest {
 
         assertEquals(responseList, result);
         verify(hotelRepository).findAll();
-        verify(convertor).convert(hotelList);
     }
 }

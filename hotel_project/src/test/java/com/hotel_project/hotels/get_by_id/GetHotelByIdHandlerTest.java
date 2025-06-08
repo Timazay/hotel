@@ -1,4 +1,4 @@
-package com.hotel_project;
+package com.hotel_project.hotels.get_by_id;
 
 import com.hotel_project.common.exceptions.NotFoundException;
 import com.hotel_project.domain.*;
@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,28 +56,27 @@ public class GetHotelByIdHandlerTest {
     }
 
     @Test
-    public void testExecute_HotelFoundById() throws Exception {
+    public void execute_When_Find_Existing_Hotel_By_Id_Should_Return_HotelResponse() throws Exception {
         when(hotelRepository.findById(hotelId)).thenReturn(Optional.of(hotel));
 
         HotelResponse response = handler.execute(hotelId);
 
-        assertNotNull(response);
-        assertEquals(hotel.getId(), response.getId());
-        assertEquals(hotel.getName(), response.getName());
-        assertEquals(hotel.getAddress().getCity(), response.getAddress().getCity());
-        assertEquals(hotel.getContact().getEmail(), response.getContact().getEmail());
-        assertEquals(2, response.getAmenities().size());
-        verify(hotelRepository).findById(hotelId);
+        assertAll(
+                () -> assertEquals(hotel.getId(), response.getId()),
+                () -> assertEquals(hotel.getName(), response.getName()),
+                () -> assertEquals(hotel.getAddress().getCity(), response.getAddress().getCity()),
+                () -> assertEquals(hotel.getContact().getEmail(), response.getContact().getEmail()),
+                () -> assertEquals(2, response.getAmenities().size())
+        );
     }
 
     @Test
-    public void testExecute_HotelNotFound() {
+    public void execute_When_Find_Not_Existing_Hotel_By_Id_Should_Throw_NotFoundException() {
         when(hotelRepository.findById(hotelId)).thenReturn(Optional.empty());
 
         NotFoundException thrown = assertThrows(NotFoundException.class, () -> handler.execute(hotelId));
         assertEquals("There is no such hotel", thrown.getMessage());
         assertTrue(thrown.getMetadata().containsKey("id"));
         assertEquals(String.valueOf(hotelId), thrown.getMetadata().get("id"));
-        verify(hotelRepository).findById(hotelId);
     }
 }

@@ -1,7 +1,7 @@
 package com.hotel_project.controllers;
 
 import com.hotel_project.common.exceptions.BadRequestException;
-import com.hotel_project.features.histograms.get.GetHotelHistogramHadler;
+import com.hotel_project.features.histograms.get.GetHotelHistogramHandler;
 import com.hotel_project.features.histograms.get.HotelParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,10 +17,10 @@ import java.util.Map;
 @RequestMapping("${hotel.prefix}")
 @Tag(name = "Histogram controller")
 public class HistogramController {
-    private final GetHotelHistogramHadler getHotelByParamHandler;
+    private final GetHotelHistogramHandler getHotelByParamHandler;
 
     @Autowired
-    public HistogramController(GetHotelHistogramHadler getHotelByParamHandler) {
+    public HistogramController(GetHotelHistogramHandler getHotelByParamHandler) {
         this.getHotelByParamHandler = getHotelByParamHandler;
     }
 

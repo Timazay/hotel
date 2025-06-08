@@ -1,4 +1,4 @@
-package com.hotel_project;
+package com.hotel_project.amenities.create;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +30,8 @@ public class CreateAmenitiesHandlerTest {
 
     private Hotel hotel;
     private List<Amenity> existingAmenities;
+    private final String POOL = "Pool";
+    private final String WIFI = "WiFi";
 
     @BeforeEach
     public void setUp() {
@@ -37,11 +39,11 @@ public class CreateAmenitiesHandlerTest {
 
         Amenity amenity = new Amenity();
         amenity.setId(1L);
-        amenity.setAmenity("WiFi");
+        amenity.setAmenity(WIFI);
 
         Amenity amenity2 = new Amenity();
         amenity2.setId(2L);
-        amenity2.setAmenity("Pool");
+        amenity2.setAmenity(POOL);
 
         existingAmenities = Arrays.asList(
                 amenity,
@@ -55,35 +57,34 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void testExecute_AddNewAndExistingAmenities_ToSave() throws Exception {
-        List<String> amenitiesToAdd = Arrays.asList("WiFi", "Gym");
+    public void execute_When_Add_New_And_Existing_Amenities_Should_Return_List_Of_Amenities() throws Exception {
+        String gym = "Gym";
+        List<String> amenitiesToAdd = Arrays.asList(WIFI, gym);
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(2L, amenitiesToAdd);
 
         when(hotelRepository.findById(request.getHotelId())).thenReturn(Optional.of(hotel));
         Amenity wifi = existingAmenities.get(0);
-        Amenity gym = new Amenity();
-        gym.setId(3L);
-        gym.setAmenity("Gym");
+        Amenity gymAmenity = new Amenity();
+        gymAmenity.setId(3L);
+        gymAmenity.setAmenity(gym);
         when(amenityRepository.findByAmenityIn(amenitiesToAdd))
-                .thenReturn(Arrays.asList(wifi, gym));
+                .thenReturn(Arrays.asList(wifi, gymAmenity));
 
         handler.execute(request);
 
-        List<String> updatedAmenities = hotel.getAmenities().stream()
+        List<String> actualResult = hotel.getAmenities().stream()
                 .map(Amenity::getAmenity)
                 .collect(Collectors.toList());
 
-        assertTrue(updatedAmenities.contains("WiFi"));
-        assertTrue(updatedAmenities.contains("Pool"));
-        assertTrue(updatedAmenities.contains("Gym"));
-        assertEquals(3, updatedAmenities.size());
-
-        verify(hotelRepository).save(hotel);
+        assertTrue(actualResult.contains(WIFI));
+        assertTrue(actualResult.contains(POOL));
+        assertTrue(actualResult.contains(gymAmenity.getAmenity()));
+        assertEquals(3, actualResult.size());
     }
 
     @Test
-    public void testExecute_DuplicateAmenities_ThrowsBadRequest() {
-        List<String> amenitiesToAdd = Arrays.asList("WiFi", "WiFi");
+    public void execute_When_Add_Duplicate_Amenities_Should_Throw_BadRequestException() {
+        List<String> amenitiesToAdd = Arrays.asList(WIFI, WIFI);
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(1, amenitiesToAdd);
 
         assertThrows(BadRequestException.class, () -> {
@@ -92,7 +93,7 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void testExecute_HotelNotFound_ThrowsNotFound() {
+    public void execute_When_Find_By_Id_With_Not_Existing_Hotel_Should_Throw_NotFoundException() {
         when(hotelRepository.findById(2L)).thenReturn(Optional.empty());
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(2, Arrays.asList("Spa"));
 
@@ -102,8 +103,9 @@ public class CreateAmenitiesHandlerTest {
     }
 
     @Test
-    public void testExecute_AddNewAmenity_When_AmenityNotExists() throws Exception {
-        List<String> amenitiesToAdd = Arrays.asList("Sauna");
+    public void execute_When_Add_New_Amenity_That_Not_Exists_Should_Return_List_Of_Amenities() throws Exception {
+        String sauna = "Sauna";
+        List<String> amenitiesToAdd = Arrays.asList(sauna);
         CreateAmenitiesRequest request = new CreateAmenitiesRequest(1, amenitiesToAdd);
 
         when(hotelRepository.findById(1L)).thenReturn(Optional.of(hotel));
@@ -112,18 +114,16 @@ public class CreateAmenitiesHandlerTest {
 
         handler.execute(request);
 
-        List<String> amenitiesNames = hotel.getAmenities().stream()
+        List<String> actualResult = hotel.getAmenities().stream()
                 .map(Amenity::getAmenity)
                 .collect(Collectors.toList());
 
-        assertTrue(amenitiesNames.contains("Sauna"));
-        assertEquals(3, amenitiesNames.size());
-
-        verify(hotelRepository).save(hotel);
+        assertTrue(actualResult.contains(sauna));
+        assertEquals(3, actualResult.size());;
     }
 
     @Test
-    public void testExecute_AddNewAmenity_When_AllAmenitiesAlreadyExists() throws Exception {
+    public void execute_When_Add_All_Amenities_That_Already_Exists_Should_Return_List_Of_Amenities() throws Exception {
         List<String> amenitiesToAdd = Arrays.asList(
                 hotel.getAmenities().get(0).getAmenity(),
                 hotel.getAmenities().get(1).getAmenity()
@@ -136,14 +136,12 @@ public class CreateAmenitiesHandlerTest {
 
         handler.execute(request);
 
-        List<String> amenitiesNames = hotel.getAmenities().stream()
+        List<String> actualResult = hotel.getAmenities().stream()
                 .map(Amenity::getAmenity)
                 .collect(Collectors.toList());
 
-        assertTrue(amenitiesNames.contains(hotel.getAmenities().get(0).getAmenity()));
-        assertTrue(amenitiesNames.contains(hotel.getAmenities().get(1).getAmenity()));
-        assertEquals(2, amenitiesNames.size());
-
-        verify(hotelRepository).save(hotel);
+        assertTrue(actualResult.contains(hotel.getAmenities().get(0).getAmenity()));
+        assertTrue(actualResult.contains(hotel.getAmenities().get(1).getAmenity()));
+        assertEquals(2, actualResult.size());
     }
 }

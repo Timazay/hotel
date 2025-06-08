@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleServiceException(Exception exception) {
         return ResponseEntity
                 .status(500)
-                .body(new ExceptionResponse("Something wrong goes with database",
+                .body(new ExceptionResponse("Something goes wrong",
                         Map.of("message", exception.getMessage())));
 
     }

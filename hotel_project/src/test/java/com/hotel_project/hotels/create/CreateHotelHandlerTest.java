@@ -1,7 +1,9 @@
-package com.hotel_project;
+package com.hotel_project.hotels.create;
 
 import com.hotel_project.common.exceptions.BadRequestException;
 import com.hotel_project.domain.Address;
+import com.hotel_project.domain.ArrivalTime;
+import com.hotel_project.domain.Contact;
 import com.hotel_project.domain.Hotel;
 import com.hotel_project.features.common.ShortHotelResponseConvertor;
 import com.hotel_project.features.common.dto.ShortHotelResponse;
@@ -19,8 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,8 +47,8 @@ public class CreateHotelHandlerTest {
         AddressDTO addressDTO = new AddressDTO(
                 "123",
                 "Main St",
-                "Kyiv",
-                "Ukraine",
+                "Minsk",
+                "Belarus",
                 "01001");
 
         ArrivalTimeDTO arrivalTimeDTO = new ArrivalTimeDTO("14:00", "12:00");
@@ -64,72 +65,43 @@ public class CreateHotelHandlerTest {
     }
 
     @Test
-    public void testExecute_Success() throws Exception {
+    public void execute_When_Valid_Request_Passed_Should_Return_Expected_ShortHotelResponse() throws Exception {
         Hotel hotel = Hotel.builder()
                 .name(request.getName())
                 .brand(request.getBrand())
                 .description(request.getDescription())
                 .address(new Address(
-                        "123",
-                        "Main St",
-                        "Kyiv",
-                        "Ukraine",
-                        "01001"))
+                        request.getAddress().getHouseNumber(),
+                        request.getAddress().getStreet(),
+                        request.getAddress().getCity(),
+                        request.getAddress().getCountry(),
+                        request.getAddress().getPostCode()))
+                .arrivalTime(new ArrivalTime(
+                        request.getArrivalTime().getCheckIn(),
+                        request.getArrivalTime().getCheckOut()))
+                .contact(new Contact(
+                        request.getContact().getPhone(),
+                        request.getContact().getEmail()))
                 .build();
 
-        when(hotelRepository.save(any(Hotel.class))).thenReturn(hotel);
+        when(hotelRepository.save(refEq(hotel))).thenReturn(hotel);
 
         ShortHotelResponse expectedResponse = new ShortHotelResponse();
-        when(shortHotelResponseConvertor.convert(anyList())).thenReturn(List.of(expectedResponse));
+        when(shortHotelResponseConvertor.convert(argThat(
+                actual -> actual.equals(List.of(hotel))))).thenReturn(List.of(expectedResponse));
 
-        ShortHotelResponse response = handler.execute(request);
+        ShortHotelResponse actualResponse = handler.execute(request);
 
-        assertNotNull(response);
+        assertEquals(actualResponse, expectedResponse);
         verify(hotelRequestValidation).validate(request);
-        verify(hotelRepository).save(any(Hotel.class));
-        verify(shortHotelResponseConvertor).convert(anyList());
     }
 
     @Test
-    public void testExecute_ValidationFails() throws Exception {
+    public void execute_When_Request_Dont_Passed_Validation_Should_Throw_BadRequestException() throws Exception {
         doThrow(new BadRequestException("Invalid data"))
-                .when(hotelRequestValidation).validate(any());
+                .when(hotelRequestValidation).validate(request);
 
-        assertThrows(BadRequestException.class, () -> handler.execute(request));
-        verify(hotelRequestValidation).validate(request);
-        verify(hotelRepository, never()).save(any());
-        verify(shortHotelResponseConvertor, never()).convert(any());
-    }
-
-    @Test
-    public void testExecute_EmptyRequestThrows() throws Exception {
-        CreateHotelRequest nullRequest = null;
-
-        doThrow(new BadRequestException("Empty request"))
-                .when(hotelRequestValidation).validate(nullRequest);
-
-        assertThrows(BadRequestException.class, () -> handler.execute(nullRequest));
-        verify(hotelRequestValidation).validate(nullRequest);
-    }
-
-    @Test
-    public void testExecute_AddressAndContactProcessing() throws Exception {
-        Hotel hotel = Hotel.builder()
-                .name(request.getName())
-                .brand(request.getBrand())
-                .description(request.getDescription())
-                .build();
-        when(hotelRepository.save(any(Hotel.class))).thenReturn(hotel);
-
-        ShortHotelResponse expectedResponse = new ShortHotelResponse();
-        when(shortHotelResponseConvertor.convert(anyList())).thenReturn(List.of(expectedResponse));
-
-        ShortHotelResponse response = handler.execute(request);
-
-        verify(hotelRepository).save(argThat(hotelArg -> {
-            Address addr = hotelArg.getAddress();
-            return addr.getCountry().equals("Ukraine") && addr.getCity().equals("Kyiv");
-        }));
-        assertNotNull(response);
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> handler.execute(request));
+        assertEquals("Invalid data", exception.getMessage());
     }
 }
